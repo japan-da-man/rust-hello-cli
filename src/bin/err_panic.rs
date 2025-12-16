@@ -1,7 +1,8 @@
 fn get_int_from_file() -> Result<i32, String> {
     let path = "number.txt";
 
-    let num_str = std::fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let num_str = std::fs::read_to_string(path)
+        .map_err(|e| e.to_string())?;
 
     num_str
         .trim()

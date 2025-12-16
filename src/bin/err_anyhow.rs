@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::{bail, ensure, Context, Result};
 
 fn get_int_from_file() -> Result<i32> {
     let path = "number.txt";
@@ -6,12 +6,18 @@ fn get_int_from_file() -> Result<i32> {
     let num_str = std::fs::read_to_string(path)
         .with_context(|| format!("failed to read string drom {}", path))?;
 
+    if num_str.len() >= 10 {
+        bail!("it may be too large numbier");
+    }
+    
+    ensure!(num_str.starts_with("1"), "first digit is not 1");
+
     num_str.trim().parse::<i32>().map(|t| t * 2).context("failed to parse string")
 }
 
 fn main() {
     match get_int_from_file() {
         Ok(x) => println!("{}", x),
-        Err(e) => println!("{}", e),
+        Err(e) => println!("{:#?}", e),
     }
 }

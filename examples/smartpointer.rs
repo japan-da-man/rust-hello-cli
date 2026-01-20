@@ -55,7 +55,21 @@ fn main() {
     use std::rc::Rc;
 
     let a = Rc::new(Cons(5, Rc::new(Cons(10, Rc::new(Nil)))));
-    let b = Cons(3, Rc::clone(&a));
-    let c = Cons(4, Rc::clone(&a));
+    // a 生成後のカウント: {}
+    println!("count after create a: {}", Rc::strong_count(&a));
 
+    let b = Cons(3, Rc::clone(&a));
+    // b 生成後のカウント: {}
+    println!("count after create b: {}", Rc::strong_count(&a));
+    {
+        let c = Cons(4, Rc::clone(&a));
+        // c 生成後のカウント: {}
+        println!("count after create c: {}", Rc::strong_count(&a));
+    }
+    // c がスコープを抜けた後のカウント: {}
+    println!("count after c goes out of scope: {}", Rc::strong_count(&a));
+
+    // RefCell
+    // 実行時に借用規制を行う
+    // Rcと組み合わせることで、可変なデータに複数の所有者を持たせる
 }

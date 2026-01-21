@@ -4,6 +4,34 @@ use std::result::Result as stdResult;
 // 使用例
 // cargo run --example hiper_type
 fn main() {
+    // ニュータイプパターン
+    // 既存型をラッパーする形で別型として扱う
+    // 型安全性と抽象化を助ける
+    #[derive(Debug)]
+    struct Meter(u32);
+    #[derive(Debug)]
+    struct CentiMeter(u32);
+
+    impl From<CentiMeter> for Meter {
+        fn from(cm: CentiMeter) -> Meter {
+            assert!(cm.0 % 100 == 0);
+            Meter(cm.0 / 100)
+        }
+    }
+
+    let ten_meter: Meter = Meter(10);
+    let two_hundred_centimeter: CentiMeter = CentiMeter(200);
+
+    fn rectangle_perimeter_length(width: Meter, height: Meter) -> Meter {
+        Meter((width.0 + height.0) * 2)
+    }
+
+    println!(
+        "Rectangle perimeter length is {} meter",
+        rectangle_perimeter_length(ten_meter, Meter::from(two_hundred_centimeter)).0
+    );
+
+
     // 型エイリアス: ある型の名前だけを変えて別typeとする
     // usecase:
     //   型をより具体的な名前にしたい。

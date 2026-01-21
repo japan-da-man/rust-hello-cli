@@ -4,7 +4,7 @@ use std::process;
 use rust_hello_cli::Config;
 
 // 使用例
-// cargo run --example main query filename
+// cargo run --example minigrep query filename
 // query: 検索キーワード ex. poe
 // filename: 検索対象ファイル ex. poem.txt
 fn main() {

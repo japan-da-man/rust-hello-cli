@@ -38,4 +38,37 @@ fn main() {
 
     let received = rx.recv().unwrap();
     println!("{}", received);
+
+    // 2つのスレッドから1つのレシーバーにセンドする
+    let (txx, rxx) = mpsc::channel();
+    // 1つ目のスレッドから送信
+    let tx1 = mpsc::Sender::clone(&txx);
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("hi"),
+            String::from("from"),
+            String::from("the"),
+            String::from("thread"),
+        ];
+        for val in vals {
+            tx1.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        };
+    });
+    // 2つ目のスレッドから送信
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("more"),
+            String::from("message"),
+            String::from("for"),
+            String::from("you"),
+        ];
+        for val in vals {
+            txx.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        };
+    });
+    for received in rxx {
+        println!("Got {}", received);
+    };
 }
